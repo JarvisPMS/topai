@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>测试汇总 | tests</title>
+  <style>
+    :root { color-scheme: light; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif; margin: 0; padding: 24px; line-height: 1.6; background: #ffffff; color: #111; }
+    header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; }
+    h1 { font-size: 24px; margin: 0; }
+    .desc { color: #333; font-size: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 16px; }
+    section { border: 1px solid #e0e0e0; background: #ffffff; padding: 16px; border-radius: 10px; }
+    .items { margin-top: 8px; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; font-size: 14px; color: #333; }
+    a { color: #0b57d0; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+  <base href="./" />
+</head>
+<body>
+  <header>
+    <h1>测试汇总</h1>
+    <div class="desc">列出各测试目录与其包含的测试项目名称</div>
+  </header>
+
+  <main class="grid">
+    <section>
+      <h2><a href="clock-draw/index.html">clock-draw</a></h2>
+      <div class="desc">浏览器模拟时钟绘制对比</div>
+      <div class="items">
+        <div>Gemini-2.5-Pro</div>
+        <div>Gemini-3.0-Pro</div>
+        <div>Gemini-3.0-Pro2</div>
+        <div>GPT-5.1</div>
+        <div>GPT-5.1-Codex-high</div>
+        <div>GPT-5.1-Codex-Max-high</div>
+        <div>GPT-5-high Beta</div>
+        <div>GPT-5-medium Beta</div>
+        <div>GPT-4.1</div>
+        <div>GPT-4o</div>
+        <div>Grok-4 Beta</div>
+        <div>Grok-4.1</div>
+        <div>Claude-Sonnet-4.5</div>
+        <div>Claude-Haiku-4.5</div>
+        <div>Kimi-K2-0905</div>
+        <div>DeepSeek-V3.1</div>
+        <div>Doubao-Seed-Code</div>
+        <div>GLM-4.6</div>
+        <div>MiniMax-M2</div>
+        <div>Qwen-3-Coder</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

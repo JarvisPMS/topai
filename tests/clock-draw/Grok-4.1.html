@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模拟时钟+Grok-4.1.html</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    font-family: Arial, sans-serif;
+  }
+
+  .clock {
+    position: relative;
+    width: 80vmin;
+    height: 80vmin;
+    max-width: 500px;
+    max-height: 500px;
+    border: 20px solid #222;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+
+  .center-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background: #222;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+  }
+
+  .hand {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform-origin: bottom center;
+    transition: transform 0.05s cubic-bezier(0.1, 2.7, 0.58, 1);
+  }
+
+  .hour-hand {
+    width: 10px;
+    height: 35%;
+    background: #222;
+    margin-left: -5px;
+    border-radius: 5px;
+  }
+
+  .minute-hand {
+    width: 8px;
+    height: 45%;
+    background: #333;
+    margin-left: -4px;
+    border-radius: 4px;
+  }
+
+  .second-hand {
+    width: 3px;
+    height: 45%;
+    background: #e74c3c;
+    margin-left: -1.5px;
+    border-radius: 2px;
+    animation: tick 60s steps(60, end) infinite;
+  }
+
+  @keyframes tick {
+    from { transform: translateX(-50%) rotate(0deg); }
+    to   { transform: translateX(-50%) rotate(360deg); }
+  }
+
+  .number {
+    position: absolute;
+    font-size: 8vmin;
+    font-weight: bold;
+    color: #222;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Numbers positioning */
+  .num12 { top: 8%; left: 50%; }
+  .num3  { top: 50%; right: 8%; }
+  .num6  { bottom: 8%; left: 50%; }
+  .num9  { top: 50%; left: 8%; }
+
+  .num1  { top: 15%; right: 23%; }
+  .num2  { top: 27%; right: 12%; }
+  .num4  { top: 73%; right: 12%; }
+  .num5  { bottom: 15%; right: 23%; }
+  .num7  { bottom: 15%; left: 23%; }
+  .num8  { top: 73%; left: 12%; }
+  .num10 { top: 27%; left: 12%; }
+  .num11 { top: 15%; left: 23%; }
+</style>
+</head>
+<body>
+  <div class="page-title" style="position: fixed; top: 0; left: 0; width: 100%; text-align: center; background: rgba(255,255,255,0.95); color: #111; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e0e0e0; z-index: 9999;">模拟时钟+Grok-4.1.html</div>
+
+<div class="clock">
+  <div class="center-dot"></div>
+
+  <div class="hand hour-hand" id="hour"></div>
+  <div class="hand minute-hand" id="minute"></div>
+  <div class="hand second-hand" id="second"></div>
+
+  <div class="number num12">12</div>
+  <div class="number num1">1</div>
+  <div class="number num2">2</div>
+  <div class="number num3">3</div>
+  <div class="number num4">4</div>
+  <div class="number num5">5</div>
+  <div class="number num6">6</div>
+  <div class="number num7">7</div>
+  <div class="number num8">8</div>
+  <div class="number num9">9</div>
+  <div class="number num10">10</div>
+  <div class="number num11">11</div>
+</div>
+
+<script>
+function updateClock() {
+  const now = new Date();
+  const seconds = now.getSeconds();
+  const minutes = now.getMinutes() + seconds / 60;
+  const hours = (now.getHours() % 12) + minutes / 60;
+
+  const secDeg = seconds * 6;           // 360/60 = 6
+  const minDeg = minutes * 6;           // 360/60 = 6
+  const hourDeg = hours * 30;           // 360/12 = 30
+
+  document.getElementById('second').style.transform = `translateX(-50%) rotate(${secDeg}deg)`;
+  document.getElementById('minute').style.transform = `translateX(-50%) rotate(${minDeg}deg)`;
+  document.getElementById('hour').style.transform   = `translateX(-50%) rotate(${hourDeg}deg)`;
+}
+
+setInterval(updateClock, 1000);
+updateClock(); // initial call
+</script>
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AI 模型时钟绘制对比 | clock-draw</title>
+  <style>
+    :root { color-scheme: light; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif; margin: 0; padding: 24px; line-height: 1.6; background: #ffffff; color: #111; }
+    header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; }
+    h1 { font-size: 24px; margin: 0; }
+    .desc { color: #333; font-size: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 16px; }
+    figure { margin: 0; }
+    figcaption { font-weight: 600; margin: 8px 0; }
+    iframe { width: 100%; height: 500px; border: 1px solid #bbb; border-radius: 10px; background: #ffffff; }
+    .top { background: #ffffff; color: #111; font-size: 28px; font-weight: 700; text-align: center; padding: 12px 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 16px; }
+    .note { border: 1px solid #e0e0e0; background: #ffffff; padding: 16px; border-radius: 10px; margin-bottom: 16px; }
+    .note h2 { font-size: 18px; margin: 0 0 8px; color: #111; }
+    .prompt { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: 13px; background: #f9f9fb; border: 1px solid #cfd8dc; padding: 12px; border-radius: 8px; color: #111; }
+    .env { color: #222; font-size: 13px; margin-top: 8px; }
+    figcaption a { font-weight: 400; font-size: 12px; margin-left: 8px; color: #0b57d0; text-decoration: none; }
+    figcaption a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="top">🕙模拟时钟大战</div>
+  <section class="note">
+    <h2>说明</h2>
+    <div>提示词：</div>
+    <div class="prompt">Create HTML/CSS (and minimal JavaScript) of an analog clock that automatically reads and displays the current system time in the browser . Include numbers (or numerals) if you wish, and have a CSS animated second hand. Make it responsive and use a white background. Return ONLY the HTML/CSS/JS code with no markdown formatting.</div>
+    <div class="env">只抽卡一次！是运气也是实力！</div>
+  </section>
+  <header>
+    <h1>AI 模型时钟绘制对比</h1>
+    <div class="desc">在统一视图中对比各模型的时钟绘制页面</div>
+  </header>
+  <main class="grid">
+    <!-- Google 模型 -->
+    <figure>
+      <figcaption>Gemini-2.5-Pro <a href="Gemini-2.5-Pro.html" target="_blank" rel="noopener noreferrer">原始页面</a></figcaption>
+      <iframe src="Gemini-2.5-Pro.html" loading="lazy" title="Gemini-2.5-Pro"></iframe>
+    </figure>
+    <figure>
+      <figcaption>Gemini-3.0-Pro <a href="Gemini-3.0-Pro.html" target="_blank" rel="noopener noreferrer">原始页面</a></figcaption>
+      <iframe src="Gemini-3.0-Pro.html" loading="lazy" title="Gemini-3.0-Pro"></iframe>
+    </figure>
+
+    <!-- OpenAI 模型 -->
+
+
+    <figure>
+      <figcaption>GPT-5.1-Codex-Max-high <a href="GPT-5.1-Codex-Max-high.html" target="_blank" rel="noopener noreferrer">原始页面</a></figcaption>
+      <iframe src="GPT-5.1-Codex-Max-high.html" loading="lazy" title="GPT-5.1-Codex-Max-high"></iframe>
+    </figure>
+
+    <figure>
+      <figcaption>GPT-5-high Beta <a href="GPT-5-high Beta.html" target="_blank" rel="noopener noreferrer">原始页面</a></figcaption>
+      <iframe src="GPT-5-high Beta.html" loading="lazy" title="GPT-5-high Beta"></iframe>
+    </figure>
+
+    <figure>
+      <figcaption>GPT-5-medium Beta <a href="GPT-5-medium Beta.html" target="_blank" rel="noopener noreferrer">原始页面</a></figcaption>
+      <iframe src="GPT-5-medium Beta.html" loading="lazy" title="GPT-5-medium Beta"></iframe>
+    </figure>
+
+    <figure>
+      <figcaption>GPT-4o <a href="GPT-4o.html" target="_blank" rel="noopener noreferrer">原始页面</a></figcaption>
+      <iframe src="GPT-4o.html" loading="lazy" title="GPT-4o"></iframe>
+    </figure>
+
+    <!-- 其他国际模型 -->
+    <figure>
+      <figcaption>Grok-4 Beta <a href="Grok-4 Beta.html" target="_blank" rel="noopener noreferrer">原始页面</a></figcaption>
+      <iframe src="Grok-4 Beta.html" loading="lazy" title="Grok-4 Beta"></iframe>
+    </figure>
+    <figure>
+      <figcaption>Grok-4.1 <a href="Grok-4.1.html" target="_blank" rel="noopener noreferrer">原始页面</a></figcaption>
+      <iframe src="Grok-4.1.html" loading="lazy" title="Grok-4.1"></iframe>
+    </figure>
+
+    <figure>
+      <figcaption>Claude-Sonnet-4.5 <a href="Claude-Sonnet-4.5.html" target="_blank" rel="noopener noreferrer">原始页面</a></figcaption>
+      <iframe src="Claude-Sonnet-4.5.html" loading="lazy" title="Claude-Sonnet-4.5"></iframe>
+    </figure>
+    <figure>
+      <figcaption>Claude-Haiku-4.5 <a href="Claude-Haiku-4.5.html" target="_blank" rel="noopener noreferrer">原始页面</a></figcaption>
+      <iframe src="Claude-Haiku-4.5.html" loading="lazy" title="Claude-Haiku-4.5"></iframe>
+    </figure>
+
+    <!-- 国内模型 -->
+    <figure>
+      <figcaption>Kimi-K2-0905 <a href="Kimi-K2-0905.html" target="_blank" rel="noopener noreferrer">原始页面</a></figcaption>
+      <iframe src="Kimi-K2-0905.html" loading="lazy" title="Kimi-K2-0905"></iframe>
+    </figure>
+    <figure>
+      <figcaption>DeepSeek-V3.1 <a href="DeepSeek-V3.1.html" target="_blank" rel="noopener noreferrer">原始页面</a></figcaption>
+      <iframe src="DeepSeek-V3.1.html" loading="lazy" title="DeepSeek-V3.1"></iframe>
+    </figure>
+    <figure>
+      <figcaption>Doubao-Seed-Code <a href="Doubao-Seed-Code.html" target="_blank" rel="noopener noreferrer">原始页面</a></figcaption>
+      <iframe src="Doubao-Seed-Code.html" loading="lazy" title="Doubao-Seed-Code"></iframe>
+    </figure>
+    <figure>
+      <figcaption>GLM-4.6 <a href="GLM-4.6.html" target="_blank" rel="noopener noreferrer">原始页面</a></figcaption>
+      <iframe src="GLM-4.6.html" loading="lazy" title="GLM-4.6"></iframe>
+    </figure>
+    <figure>
+      <figcaption>MiniMax-M2 <a href="MiniMax-M2.html" target="_blank" rel="noopener noreferrer">原始页面</a></figcaption>
+      <iframe src="MiniMax-M2.html" loading="lazy" title="MiniMax-M2"></iframe>
+    </figure>
+    <figure>
+      <figcaption>Qwen-3-Coder <a href="Qwen-3-Coder.html" target="_blank" rel="noopener noreferrer">原始页面</a></figcaption>
+      <iframe src="Qwen-3-Coder.html" loading="lazy" title="Qwen-3-Coder"></iframe>
+    </figure>
+  </main>
+</body>
+</html>

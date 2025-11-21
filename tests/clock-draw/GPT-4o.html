@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>模拟时钟+GPT-4o.html</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      margin: 0;
+      padding: 24px;
+      line-height: 1.6;
+      background: white;
+    }
+    .clock {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      border: 8px solid #333;
+      border-radius: 50%;
+      margin: 0 auto;
+      background: white;
+    }
+    .clock .number {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      transform: translate(-50%, -50%);
+    }
+    .hand {
+      position: absolute;
+      width: 50%;
+      height: 2px;
+      background: #333;
+      top: 50%;
+      transform-origin: 100%;
+      transform: rotate(90deg);
+      transition: transform 0.05s ease-in-out;
+    }
+    .hour {
+      height: 4px;
+      width: 35%;
+      background: #333;
+    }
+    .minute {
+      height: 3px;
+      width: 45%;
+      background: #666;
+    }
+    .second {
+      height: 2px;
+      width: 50%;
+      background: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-title" style="position: fixed; top: 0; left: 0; width: 100%; text-align: center; background: rgba(255,255,255,0.95); color: #111; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e0e0e0; z-index: 9999;">模拟时钟+GPT-4o.html</div>
+  <div class="clock">
+    <div class="number" style="top: 10%; left: 50%;">12</div>
+    <div class="number" style="top: 50%; left: 90%;">3</div>
+    <div class="number" style="top: 90%; left: 50%;">6</div>
+    <div class="number" style="top: 50%; left: 10%;">9</div>
+    <div class="hand hour" id="hour"></div>
+    <div class="hand minute" id="minute"></div>
+    <div class="hand second" id="second"></div>
+  </div>
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const seconds = now.getSeconds();
+      const minutes = now.getMinutes();
+      const hours = now.getHours();
+
+      const secondHand = document.getElementById('second');
+      const minuteHand = document.getElementById('minute');
+      const hourHand = document.getElementById('hour');
+
+      const secondDeg = seconds * 6;
+      const minuteDeg = minutes * 6 + seconds * 0.1;
+      const hourDeg = hours * 30 + minutes * 0.5;
+
+      secondHand.style.transform = `rotate(${secondDeg}deg)`;
+      minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
+      hourHand.style.transform = `rotate(${hourDeg}deg)`;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>

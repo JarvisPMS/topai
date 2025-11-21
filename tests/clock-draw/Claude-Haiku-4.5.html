@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模拟时钟+Claude-Haiku-4.5.html</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .clock-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: white;
+            border: 8px solid #333;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .clock-center {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #333;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .number {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .number span {
+            display: inline-block;
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+            background: #333;
+        }
+
+        .hour-hand {
+            width: 6px;
+            height: 80px;
+            margin-left: -3px;
+            background: #333;
+        }
+
+        .minute-hand {
+            width: 4px;
+            height: 110px;
+            margin-left: -2px;
+            background: #333;
+        }
+
+        .second-hand {
+            width: 2px;
+            height: 120px;
+            margin-left: -1px;
+            background: #e74c3c;
+            animation: rotate 60s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .clock-container {
+                width: 200px;
+                height: 200px;
+                border-width: 5px;
+            }
+
+            .number {
+                font-size: 16px;
+            }
+
+            .number span {
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+            }
+
+            .hour-hand {
+                height: 55px;
+            }
+
+            .minute-hand {
+                height: 75px;
+            }
+
+            .second-hand {
+                height: 82px;
+            }
+
+            .clock-center {
+                width: 10px;
+                height: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-title" style="position: fixed; top: 0; left: 0; width: 100%; text-align: center; background: rgba(255,255,255,0.95); color: #111; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e0e0e0; z-index: 9999;">模拟时钟+Claude-Haiku-4.5.html</div>
+    <div class="clock-container">
+        <div class="number" id="numbers"></div>
+        <div class="hand hour-hand" id="hourHand"></div>
+        <div class="hand minute-hand" id="minuteHand"></div>
+        <div class="hand second-hand" id="secondHand"></div>
+        <div class="clock-center"></div>
+    </div>
+
+    <script>
+        function initializeNumbers() {
+            const numbersContainer = document.getElementById('numbers');
+            const clockRadius = 150;
+            
+            for (let i = 1; i <= 12; i++) {
+                const angle = (i - 3) * 30 * Math.PI / 180;
+                const x = clockRadius + clockRadius * 0.75 * Math.cos(angle);
+                const y = clockRadius + clockRadius * 0.75 * Math.sin(angle);
+                
+                const numSpan = document.createElement('span');
+                numSpan.textContent = i;
+                numSpan.style.left = x + 'px';
+                numSpan.style.top = y + 'px';
+                numSpan.style.transform = 'translate(-50%, -50%)';
+                
+                numbersContainer.appendChild(numSpan);
+            }
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours() % 12;
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            const milliseconds = now.getMilliseconds();
+
+            const secondDegrees = (seconds + milliseconds / 1000) * 6;
+            const minuteDegrees = (minutes + seconds / 60) * 6;
+            const hourDegrees = (hours + minutes / 60) * 30;
+
+            document.getElementById('secondHand').style.transform = `rotate(${secondDegrees}deg)`;
+            document.getElementById('minuteHand').style.transform = `rotate(${minuteDegrees}deg)`;
+            document.getElementById('hourHand').style.transform = `rotate(${hourDegrees}deg)`;
+
+            requestAnimationFrame(updateClock);
+        }
+
+        initializeNumbers();
+        updateClock();
+    </script>
+</body>
+</html>

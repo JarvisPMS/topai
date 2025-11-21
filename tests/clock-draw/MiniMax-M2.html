@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模拟时钟+MiniMax-M2.html</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: white;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .clock-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border: 8px solid #333;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .clock {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .number {
+            position: absolute;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            transform: translate(-50%, -50%);
+        }
+
+        .number1 { top: 10%; left: 50%; }
+        .number2 { top: 18%; left: 82%; }
+        .number3 { top: 50%; left: 90%; }
+        .number4 { top: 82%; left: 82%; }
+        .number5 { top: 90%; left: 50%; }
+        .number6 { top: 50%; left: 10%; }
+        .number7 { top: 18%; left: 18%; }
+        .number8 { top: 10%; left: 50%; }
+        .number9 { top: 50%; left: 90%; }
+        .number10 { top: 82%; left: 18%; }
+        .number11 { top: 90%; left: 50%; }
+        .number12 { top: 50%; left: 10%; }
+
+        .hand {
+            position: absolute;
+            left: 50%;
+            bottom: 50%;
+            transform-origin: bottom center;
+            transform: translateX(-50%) rotate(0deg);
+            border-radius: 10px;
+        }
+
+        .hour-hand {
+            width: 6px;
+            height: 80px;
+            background: #333;
+            margin-left: -3px;
+            z-index: 3;
+        }
+
+        .minute-hand {
+            width: 4px;
+            height: 110px;
+            background: #666;
+            margin-left: -2px;
+            z-index: 2;
+        }
+
+        .second-hand {
+            width: 2px;
+            height: 120px;
+            background: #e74c3c;
+            margin-left: -1px;
+            z-index: 1;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .center-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 16px;
+            height: 16px;
+            background: #333;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 4;
+            box-shadow: 0 0 0 2px white;
+        }
+
+        .tick {
+            position: absolute;
+            width: 2px;
+            height: 15px;
+            background: #333;
+            left: 50%;
+            top: 10px;
+            transform: translateX(-50%);
+            transform-origin: bottom center;
+        }
+
+        .tick.t5 { height: 20px; width: 3px; }
+        .tick.t10 { height: 20px; width: 3px; }
+        .tick.t15 { height: 25px; width: 4px; }
+        .tick.t20 { height: 20px; width: 3px; }
+        .tick.t25 { height: 20px; width: 3px; }
+        .tick.t30 { height: 25px; width: 4px; }
+        .tick.t35 { height: 20px; width: 3px; }
+        .tick.t40 { height: 20px; width: 3px; }
+        .tick.t45 { height: 25px; width: 4px; }
+        .tick.t50 { height: 20px; width: 3px; }
+        .tick.t55 { height: 20px; width: 3px; }
+
+        .time-display {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+
+        .digital-time {
+            font-family: 'Courier New', monospace;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .clock-container {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .number {
+                font-size: 20px;
+                width: 25px;
+                height: 25px;
+                line-height: 25px;
+            }
+            
+            .hour-hand { height: 70px; }
+            .minute-hand { height: 95px; }
+            .second-hand { height: 105px; }
+            
+            .time-display {
+                bottom: -50px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .clock-container {
+                width: 200px;
+                height: 200px;
+                border-width: 6px;
+            }
+            
+            .number {
+                font-size: 16px;
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+            }
+            
+            .hour-hand { height: 60px; }
+            .minute-hand { height: 80px; }
+            .second-hand { height: 90px; }
+            
+            .time-display {
+                bottom: -40px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-title" style="position: fixed; top: 0; left: 0; width: 100%; text-align: center; background: rgba(255,255,255,0.95); color: #111; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e0e0e0; z-index: 9999;">模拟时钟+MiniMax-M2.html</div>
+    <div class="clock-container">
+        <div class="clock">
+            <!-- Hour markers -->
+            <div class="number number12">12</div>
+            <div class="number number1">1</div>
+            <div class="number number2">2</div>
+            <div class="number number3">3</div>
+            <div class="number number4">4</div>
+            <div class="number number5">5</div>
+            <div class="number number6">6</div>
+            <div class="number number7">7</div>
+            <div class="number number8">8</div>
+            <div class="number number9">9</div>
+            <div class="number number10">10</div>
+            <div class="number number11">11</div>
+
+            <!-- Minute markers -->
+            <div class="tick t5"></div>
+            <div class="tick t10"></div>
+            <div class="tick t15"></div>
+            <div class="tick t20"></div>
+            <div class="tick t25"></div>
+            <div class="tick t30"></div>
+            <div class="tick t35"></div>
+            <div class="tick t40"></div>
+            <div class="tick t45"></div>
+            <div class="tick t50"></div>
+            <div class="tick t55"></div>
+
+            <!-- Clock hands -->
+            <div class="hand hour-hand"></div>
+            <div class="hand minute-hand"></div>
+            <div class="hand second-hand"></div>
+            
+            <!-- Center dot -->
+            <div class="center-dot"></div>
+        </div>
+        
+        <div class="time-display">
+            <div>MiniMax-M2 Clock</div>
+            <div class="digital-time" id="digitalTime"></div>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours() % 12;
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
+            // Calculate angles
+            const hourAngle = (hours * 30) + (minutes * 0.5);
+            const minuteAngle = minutes * 6;
+            const secondAngle = seconds * 6;
+
+            // Update hands
+            const hourHand = document.querySelector('.hour-hand');
+            const minuteHand = document.querySelector('.minute-hand');
+            const secondHand = document.querySelector('.second-hand');
+            const digitalTime = document.getElementById('digitalTime');
+
+            hourHand.style.transform = `translateX(-50%) rotate(${hourAngle}deg)`;
+            minuteHand.style.transform = `translateX(-50%) rotate(${minuteAngle}deg)`;
+            secondHand.style.transform = `translateX(-50%) rotate(${secondAngle}deg)`;
+
+            // Update digital time display
+            const timeString = now.toLocaleTimeString('en-US', {
+                hour12: true,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            digitalTime.textContent = timeString;
+        }
+
+        // Update clock immediately and then every second
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // Add smooth animation to second hand
+        document.addEventListener('DOMContentLoaded', function() {
+            const secondHand = document.querySelector('.second-hand');
+            secondHand.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>模拟时钟+GPT-5-medium Beta.html</title>
+  <style>
+    :root { color-scheme: light; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+    }
+    .clock {
+      position: relative;
+      width: min(80vmin, 420px);
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background: #fff;
+      border: 8px solid #333;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    }
+    .face { position: absolute; inset: 0; }
+    .number {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 100%;
+      height: 100%;
+      transform-origin: center;
+      text-align: center;
+      color: #333;
+      font-weight: 700;
+      font-size: clamp(12px, 4vmin, 22px);
+      pointer-events: none;
+    }
+    .number span { display: inline-block; transform: rotate(var(--rev, 0deg)); }
+    .n1  { transform: rotate(30deg);  }
+    .n2  { transform: rotate(60deg);  }
+    .n3  { transform: rotate(90deg);  }
+    .n4  { transform: rotate(120deg); }
+    .n5  { transform: rotate(150deg); }
+    .n6  { transform: rotate(180deg); }
+    .n7  { transform: rotate(210deg); }
+    .n8  { transform: rotate(240deg); }
+    .n9  { transform: rotate(270deg); }
+    .n10 { transform: rotate(300deg); }
+    .n11 { transform: rotate(330deg); }
+    .n12 { transform: rotate(0deg);   }
+    .n1  span { --rev: -30deg;  }
+    .n2  span { --rev: -60deg;  }
+    .n3  span { --rev: -90deg;  }
+    .n4  span { --rev: -120deg; }
+    .n5  span { --rev: -150deg; }
+    .n6  span { --rev: -180deg; }
+    .n7  span { --rev: -210deg; }
+    .n8  span { --rev: -240deg; }
+    .n9  span { --rev: -270deg; }
+    .n10 span { --rev: -300deg; }
+    .n11 span { --rev: -330deg; }
+    .n12 span { --rev: 0deg;    }
+    .ticks { position: absolute; inset: 0; }
+    .tick {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 2px;
+      height: 8%;
+      background: #bbb;
+      transform-origin: center calc(50% + 38%);
+    }
+    .tick.major { height: 10%; background: #333; width: 3px; }
+    .hand {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) rotate(0deg);
+      transform-origin: bottom center;
+      border-radius: 6px;
+    }
+    .hand.hour { width: 8px; height: 25%; background: #333; }
+    .hand.minute { width: 5px; height: 35%; background: #666; }
+    .hand.second { width: 2px; height: 40%; background: #e74c3c; animation: sweep 60s linear infinite; }
+    .center-dot {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(8px, 2.2vmin, 12px);
+      height: clamp(8px, 2.2vmin, 12px);
+      background: #e74c3c;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      z-index: 5;
+    }
+    @keyframes sweep {
+      from { transform: translateX(-50%) rotate(0deg); }
+      to   { transform: translateX(-50%) rotate(360deg); }
+    }
+    @media (max-width: 400px) { .clock { border-width: 6px; } }
+  </style>
+</head>
+<body>
+  <div class="page-title" style="position: fixed; top: 0; left: 0; width: 100%; text-align: center; background: rgba(255,255,255,0.95); color: #111; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e0e0e0; z-index: 9999;">模拟时钟+GPT-5-medium Beta.html</div>
+  <div class="clock" aria-label="模拟时钟，显示当前系统时间">
+    <div class="face">
+      <div class="number n1"><span>1</span></div>
+      <div class="number n2"><span>2</span></div>
+      <div class="number n3"><span>3</span></div>
+      <div class="number n4"><span>4</span></div>
+      <div class="number n5"><span>5</span></div>
+      <div class="number n6"><span>6</span></div>
+      <div class="number n7"><span>7</span></div>
+      <div class="number n8"><span>8</span></div>
+      <div class="number n9"><span>9</span></div>
+      <div class="number n10"><span>10</span></div>
+      <div class="number n11"><span>11</span></div>
+      <div class="number n12"><span>12</span></div>
+      <div class="ticks" id="ticks"></div>
+      <div class="hand hour" id="hour"></div>
+      <div class="hand minute" id="minute"></div>
+      <div class="hand second" id="second"></div>
+      <div class="center-dot" aria-hidden="true"></div>
+      </div>
+  </div>
+
+  <script>
+    const secondHand = document.getElementById('second');
+    const minuteHand = document.getElementById('minute');
+    const hourHand = document.getElementById('hour');
+
+    (function createTicks() {
+      const wrap = document.getElementById('ticks');
+      for (let i = 0; i < 60; i++) {
+        const el = document.createElement('div');
+        el.className = 'tick' + (i % 5 === 0 ? ' major' : '');
+        el.style.transform = `rotate(${i * 6}deg)`;
+        wrap.appendChild(el);
+      }
+    })();
+
+    function setClock() {
+      const now = new Date();
+      const s = now.getSeconds();
+      const m = now.getMinutes();
+      const h = now.getHours();
+
+      const minuteDeg = m * 6 + s * 0.1;
+      const hourDeg = (h % 12) * 30 + m * 0.5;
+      minuteHand.style.transform = `translateX(-50%) rotate(${minuteDeg}deg)`;
+      hourHand.style.transform = `translateX(-50%) rotate(${hourDeg}deg)`;
+    }
+
+    (function syncSecondHand() {
+      const sec = new Date().getSeconds();
+      secondHand.style.animation = 'none';
+      secondHand.style.transform = `translateX(-50%) rotate(${sec * 6}deg)`;
+      setTimeout(() => {
+        secondHand.style.animation = 'sweep 60s linear infinite';
+        secondHand.style.animationDelay = `-${sec}s`;
+      }, 20);
+    })();
+
+    setClock();
+    setInterval(setClock, 1000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>模拟时钟+DeepSeek-V3.1.html</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      margin: 0;
+      padding: 24px;
+      line-height: 1.6;
+      background: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    
+    .clock-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+    }
+    
+    .clock {
+      width: 300px;
+      height: 300px;
+      border: 20px solid #333;
+      border-radius: 50%;
+      position: relative;
+      background: white;
+      box-shadow: 0 0 30px rgba(0,0,0,0.1);
+    }
+    
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px);
+    }
+    
+    .hand {
+      width: 50%;
+      height: 6px;
+      background: #333;
+      position: absolute;
+      top: 50%;
+      transform-origin: 100%;
+      transform: rotate(90deg);
+      transition: all 0.05s;
+      transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+    }
+    
+    .hour-hand {
+      height: 8px;
+      width: 35%;
+      left: 15%;
+      background: #333;
+    }
+    
+    .minute-hand {
+      height: 6px;
+      width: 45%;
+      left: 5%;
+      background: #666;
+    }
+    
+    .second-hand {
+      height: 2px;
+      width: 48%;
+      left: 2%;
+      background: #ff4444;
+      transition: none;
+    }
+    
+    .center-dot {
+      width: 12px;
+      height: 12px;
+      background: #ff4444;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+    
+    .number {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transform: rotate(var(--rotation));
+      font-size: 18px;
+      font-weight: bold;
+    }
+    
+    .number1 { --rotation: 30deg; }
+    .number2 { --rotation: 60deg; }
+    .number3 { --rotation: 90deg; }
+    .number4 { --rotation: 120deg; }
+    .number5 { --rotation: 150deg; }
+    .number6 { --rotation: 180deg; }
+    .number7 { --rotation: 210deg; }
+    .number8 { --rotation: 240deg; }
+    .number9 { --rotation: 270deg; }
+    .number10 { --rotation: 300deg; }
+    .number11 { --rotation: 330deg; }
+    .number12 { --rotation: 0deg; }
+    
+    .tick {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transform: rotate(var(--tick-rotation));
+    }
+    
+    .tick::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 2px;
+      height: 12px;
+      background: #ccc;
+      transform: translateX(-50%);
+    }
+    
+    .tick.major::before {
+      height: 18px;
+      background: #666;
+      width: 3px;
+    }
+    
+    @media (max-width: 480px) {
+      .clock {
+        width: 250px;
+        height: 250px;
+        border-width: 15px;
+      }
+      
+      .number {
+        font-size: 16px;
+      }
+      
+      .hand {
+        height: 5px;
+      }
+      
+      .hour-hand {
+        height: 7px;
+      }
+      
+      .second-hand {
+        height: 2px;
+      }
+    }
+    
+    @media (max-width: 320px) {
+      .clock {
+        width: 200px;
+        height: 200px;
+        border-width: 12px;
+      }
+      
+      .number {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-title" style="position: fixed; top: 0; left: 0; width: 100%; text-align: center; background: rgba(255,255,255,0.95); color: #111; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e0e0e0; z-index: 9999;">模拟时钟+DeepSeek-V3.1.html</div>
+  <div class="clock-container">
+    <div class="clock">
+      <div class="clock-face">
+        <!-- 时钟数字 -->
+        <div class="number number1">1</div>
+        <div class="number number2">2</div>
+        <div class="number number3">3</div>
+        <div class="number number4">4</div>
+        <div class="number number5">5</div>
+        <div class="number number6">6</div>
+        <div class="number number7">7</div>
+        <div class="number number8">8</div>
+        <div class="number number9">9</div>
+        <div class="number number10">10</div>
+        <div class="number number11">11</div>
+        <div class="number number12">12</div>
+        
+        <!-- 时钟刻度 -->
+        <div class="tick major" style="--tick-rotation: 0deg"></div>
+        <div class="tick" style="--tick-rotation: 6deg"></div>
+        <div class="tick" style="--tick-rotation: 12deg"></div>
+        <div class="tick" style="--tick-rotation: 18deg"></div>
+        <div class="tick major" style="--tick-rotation: 30deg"></div>
+        <div class="tick" style="--tick-rotation: 36deg"></div>
+        <div class="tick" style="--tick-rotation: 42deg"></div>
+        <div class="tick" style="--tick-rotation: 48deg"></div>
+        <div class="tick major" style="--tick-rotation: 60deg"></div>
+        <div class="tick" style="--tick-rotation: 66deg"></div>
+        <div class="tick" style="--tick-rotation: 72deg"></div>
+        <div class="tick" style="--tick-rotation: 78deg"></div>
+        <div class="tick major" style="--tick-rotation: 90deg"></div>
+        <div class="tick" style="--tick-rotation: 96deg"></div>
+        <div class="tick" style="--tick-rotation: 102deg"></div>
+        <div class="tick" style="--tick-rotation: 108deg"></div>
+        <div class="tick major" style="--tick-rotation: 120deg"></div>
+        <div class="tick" style="--tick-rotation: 126deg"></div>
+        <div class="tick" style="--tick-rotation: 132deg"></div>
+        <div class="tick" style="--tick-rotation: 138deg"></div>
+        <div class="tick major" style="--tick-rotation: 150deg"></div>
+        <div class="tick" style="--tick-rotation: 156deg"></div>
+        <div class="tick" style="--tick-rotation: 162deg"></div>
+        <div class="tick" style="--tick-rotation: 168deg"></div>
+        <div class="tick major" style="--tick-rotation: 180deg"></div>
+        <div class="tick" style="--tick-rotation: 186deg"></div>
+        <div class="tick" style="--tick-rotation: 192deg"></div>
+        <div class="tick" style="--tick-rotation: 198deg"></div>
+        <div class="tick major" style="--tick-rotation: 210deg"></div>
+        <div class="tick" style="--tick-rotation: 216deg"></div>
+        <div class="tick" style="--tick-rotation: 222deg"></div>
+        <div class="tick" style="--tick-rotation: 228deg"></div>
+        <div class="tick major" style="--tick-rotation: 240deg"></div>
+        <div class="tick" style="--tick-rotation: 246deg"></div>
+        <div class="tick" style="--tick-rotation: 252deg"></div>
+        <div class="tick" style="--tick-rotation: 258deg"></div>
+        <div class="tick major" style="--tick-rotation: 270deg"></div>
+        <div class="tick" style="--tick-rotation: 276deg"></div>
+        <div class="tick" style="--tick-rotation: 282deg"></div>
+        <div class="tick" style="--tick-rotation: 288deg"></div>
+        <div class="tick major" style="--tick-rotation: 300deg"></div>
+        <div class="tick" style="--tick-rotation: 306deg"></div>
+        <div class="tick" style="--tick-rotation: 312deg"></div>
+        <div class="tick" style="--tick-rotation: 318deg"></div>
+        <div class="tick major" style="--tick-rotation: 330deg"></div>
+        <div class="tick" style="--tick-rotation: 336deg"></div>
+        <div class="tick" style="--tick-rotation: 342deg"></div>
+        <div class="tick" style="--tick-rotation: 348deg"></div>
+        
+        <!-- 时钟指针 -->
+        <div class="hand hour-hand"></div>
+        <div class="hand minute-hand"></div>
+        <div class="hand second-hand"></div>
+        <div class="center-dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const secondHand = document.querySelector('.second-hand');
+    const minuteHand = document.querySelector('.minute-hand');
+    const hourHand = document.querySelector('.hour-hand');
+    
+    function setDate() {
+      const now = new Date();
+      
+      const seconds = now.getSeconds();
+      const secondsDegrees = ((seconds / 60) * 360) + 90;
+      secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+      
+      const minutes = now.getMinutes();
+      const minutesDegrees = ((minutes / 60) * 360) + ((seconds/60)*6) + 90;
+      minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
+      
+      const hours = now.getHours();
+      const hoursDegrees = ((hours / 12) * 360) + ((minutes/60)*30) + 90;
+      hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
+    }
+    
+    // 初始设置时间
+    setDate();
+    
+    // 每秒更新一次
+    setInterval(setDate, 1000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模拟时钟+Gemini-3.0-Pro.html</title>
+    <style>
+        /* Reset and Base Layout */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        /* Clock Container */
+        .clock {
+            width: 350px;
+            height: 350px;
+            border: 10px solid #333;
+            border-radius: 50%;
+            position: relative;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            /* Responsive scaling */
+            max-width: 90vw;
+            max-height: 90vw;
+        }
+
+        /* Clock Face Details */
+        .clock::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #333;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 11;
+        }
+
+        /* Numbers */
+        .number {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transform: rotate(var(--rotation));
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .number span {
+            display: inline-block;
+            margin-top: 10px;
+            transform: rotate(calc(var(--rotation) * -1)); /* Keep numbers upright */
+        }
+
+        /* Hands Shared Styles */
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom;
+            transform: translateX(-50%) rotate(calc(var(--rotation) * 1deg));
+            background-color: #333;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            z-index: 10;
+        }
+
+        /* Specific Hand Styles */
+        .hand.hour {
+            width: 8px;
+            height: 25%; /* Short */
+            background-color: #333;
+        }
+
+        .hand.minute {
+            width: 5px;
+            height: 40%; /* Medium */
+            background-color: #666;
+        }
+
+        .hand.second {
+            width: 2px;
+            height: 45%; /* Long */
+            background-color: #e74c3c; /* Red */
+            z-index: 12;
+            /* Tail for the second hand */
+        }
+
+        /* Optional: Ticks (using a gradient or simple marks could be added here, but kept clean per request) */
+
+        /* Responsive Adjustments */
+        @media (max-width: 400px) {
+            .clock {
+                width: 280px;
+                height: 280px;
+                border-width: 8px;
+            }
+            .number {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+  <div class="page-title" style="position: fixed; top: 0; left: 0; width: 100%; text-align: center; background: rgba(255,255,255,0.95); color: #111; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e0e0e0; z-index: 9999;">模拟时钟+Gemini-3.0-Pro.html</div>
+
+    <div class="clock">
+        <!-- Hands -->
+        <div class="hand hour" id="hour-hand"></div>
+        <div class="hand minute" id="minute-hand"></div>
+        <div class="hand second" id="second-hand"></div>
+
+        <!-- Numbers 1-12 generated via HTML for simplicity -->
+        <div class="number" style="--rotation: 30deg;"><span>1</span></div>
+        <div class="number" style="--rotation: 60deg;"><span>2</span></div>
+        <div class="number" style="--rotation: 90deg;"><span>3</span></div>
+        <div class="number" style="--rotation: 120deg;"><span>4</span></div>
+        <div class="number" style="--rotation: 150deg;"><span>5</span></div>
+        <div class="number" style="--rotation: 180deg;"><span>6</span></div>
+        <div class="number" style="--rotation: 210deg;"><span>7</span></div>
+        <div class="number" style="--rotation: 240deg;"><span>8</span></div>
+        <div class="number" style="--rotation: 270deg;"><span>9</span></div>
+        <div class="number" style="--rotation: 300deg;"><span>10</span></div>
+        <div class="number" style="--rotation: 330deg;"><span>11</span></div>
+        <div class="number" style="--rotation: 0deg;"><span>12</span></div>
+    </div>
+
+    <script>
+        const hourHand = document.querySelector('#hour-hand');
+        const minuteHand = document.querySelector('#minute-hand');
+        const secondHand = document.querySelector('#second-hand');
+
+        function setClock() {
+            const currentDate = new Date();
+            const secondsRatio = currentDate.getSeconds() / 60;
+            const minutesRatio = (secondsRatio + currentDate.getMinutes()) / 60;
+            const hoursRatio = (minutesRatio + currentDate.getHours()) / 12;
+
+            setRotation(secondHand, secondsRatio);
+            setRotation(minuteHand, minutesRatio);
+            setRotation(hourHand, hoursRatio);
+        }
+
+        function setRotation(element, rotationRatio) {
+            element.style.setProperty('--rotation', rotationRatio * 360);
+        }
+
+        // Initialize and run immediately to avoid delay
+        setClock();
+        setInterval(setClock, 1000);
+    </script>
+</body>
+</html>
